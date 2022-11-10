@@ -53,7 +53,8 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-        //
+        return $user->id === $category->user_id;
+
     }
 
     /**
@@ -65,7 +66,8 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        //
+        return $user->id === $category->user_id;
+
     }
 
     /**

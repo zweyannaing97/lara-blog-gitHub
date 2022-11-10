@@ -29,9 +29,12 @@
                             <span class="badge bg-secondary">{{$category->slug}}</span>
                         </td>
                         <td class="">
+                            @can('update',$category)
                             <a href="{{route('category.edit',$category->id)}}">
                                 <button class="btn btn-sm btn-outline-secondary">Edit</button>
                             </a>
+                            @endcan
+                            @can('delete',$category)
                             <a>
                                 <form action="{{route('category.destroy',$category->id)}}" method="post" class="d-inline-block">
                                     @csrf
@@ -39,6 +42,7 @@
                                     <button class="btn btn-sm btn-outline-secondary">Delete</button>
                                 </form>
                             </a>
+                            @endcan
                         </td>
                         <td>
                             <p class="small text-black-50 mb-0">{{$category->created_at->format('d M Y')}}</p>
