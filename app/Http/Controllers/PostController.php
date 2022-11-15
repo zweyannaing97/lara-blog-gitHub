@@ -23,7 +23,8 @@ class PostController extends Controller
             $keyword = request('keyword');
             $q->orWhere("title","like","%$keyword%")
                 ->orWhere("description","like","%$keyword%");
-        })->
+        })->when(Auth::user()->isAuthor(),fn($q)=>$q->where("user_id",Auth::id()))
+            ->
         latest('id')->paginate(10)->withQueryString();
         return view('post.index',compact('posts'));
     }
@@ -71,6 +72,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        Gate::authorize('view',$post);
         return view('post.show',compact('post'));
     }
 

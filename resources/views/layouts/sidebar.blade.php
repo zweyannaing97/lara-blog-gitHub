@@ -24,9 +24,11 @@
     </a>
 </div>
 
+@admin
 <p class="small mb-1 text-black-50">Manage User</p>
 <div class="list-group mb-3">
     <a class="list-group-item list-group-item-action" href="{{route('user.index')}}">
         User List
     </a>
 </div>
+@endadmin

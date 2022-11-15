@@ -33,7 +33,9 @@
                     <td>#</td>
                     <td>Title</td>
                     <td>Category</td>
+                    @if(Auth::user()->role != "author")
                     <td>Owner</td>
+                    @endif
                     <td>Control</td>
                     <td>Created</td>
                 </tr>
@@ -48,9 +50,11 @@
                         <td>
                             {{\App\Models\Category::find($post->category_id)->title}}
                         </td>
+                        @notAuthor
                         <td>
                             {{\App\Models\User::find($post->user_id)->name}}
                         </td>
+                        @endnotAuthor
                         <td class="">
                             <a href="{{route('post.show',$post->id)}}">
                                 <button class="btn btn-sm btn-outline-info">Show</button>
