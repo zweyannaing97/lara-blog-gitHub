@@ -16,6 +16,11 @@ class CategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
+
+    public function before(User $user){
+        return $user->role === "admin" || $user->role === "editor";
+    }
+
     public function viewAny(User $user)
     {
         //

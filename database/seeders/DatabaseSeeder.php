@@ -24,8 +24,27 @@ class DatabaseSeeder extends Seeder
          \App\Models\User::factory()->create([
              'name' => 'Zwe Yan Naing',
              'email' => 'zyn1@gmail.com',
+             'role' => 'admin',
              'password' => Hash::make('asdffdsa')
          ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test Admin',
+            'email' => 'admin@gmail.com',
+            'role' => 'admin',
+            'password' => Hash::make('asdffdsa')
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test Editor',
+            'email' => 'editor@gmail.com',
+            'role' => 'editor',
+            'password' => Hash::make('asdffdsa')
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test Author',
+            'email' => 'author@gmail.com',
+            'role' => 'author',
+            'password' => Hash::make('asdffdsa')
+        ]);
 
         $this->call([
            CategorySeeder::class,
