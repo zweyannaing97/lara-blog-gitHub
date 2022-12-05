@@ -2,6 +2,9 @@
     <a class="list-group-item list-group-item-action" href="{{route('home')}}">
         Home
     </a>
+    <a class="list-group-item list-group-item-action" href="{{route('photo.index')}}">
+        Gallery
+    </a>
 </div>
 
 <p class="small mb-1 text-black-50">Manage Category</p>

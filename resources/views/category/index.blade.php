@@ -15,6 +15,7 @@
                     <tr>
                         <td>#</td>
                         <td>Title</td>
+                        <td>Post Count</td>
                         <td>Control</td>
                         <td>Created</td>
                     </tr>
@@ -27,6 +28,9 @@
                             {{$category->title}}
                             <br>
                             <span class="badge bg-secondary">{{$category->slug}}</span>
+                        </td>
+                        <td>
+                            {{$category->posts()->count()}}
                         </td>
                         <td class="">
                             @can('update',$category)

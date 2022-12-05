@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -19,36 +20,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(10)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 'Zwe Yan Naing',
-             'email' => 'zyn1@gmail.com',
-             'role' => 'admin',
-             'password' => Hash::make('asdffdsa')
-         ]);
-        \App\Models\User::factory()->create([
-            'name' => 'Test Admin',
-            'email' => 'admin@gmail.com',
-            'role' => 'admin',
-            'password' => Hash::make('asdffdsa')
-        ]);
-        \App\Models\User::factory()->create([
-            'name' => 'Test Editor',
-            'email' => 'editor@gmail.com',
-            'role' => 'editor',
-            'password' => Hash::make('asdffdsa')
-        ]);
-        \App\Models\User::factory()->create([
-            'name' => 'Test Author',
-            'email' => 'author@gmail.com',
-            'role' => 'author',
-            'password' => Hash::make('asdffdsa')
-        ]);
 
         $this->call([
-           CategorySeeder::class,
+//            NationSeeder::class,
+//           UserSeeder::class,
+//           CategorySeeder::class,
            PostSeeder::class
         ]);
+
+//        $photos = Storage::allFiles("public");
+//        array_shift($photos);
+//
+//        Storage::delete($photos);
+//
+//        echo "\e[93mStorage Cleaned\n";
     }
 }

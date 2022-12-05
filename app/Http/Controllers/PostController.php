@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -24,8 +26,10 @@ class PostController extends Controller
             $q->orWhere("title","like","%$keyword%")
                 ->orWhere("description","like","%$keyword%");
         })->when(Auth::user()->isAuthor(),fn($q)=>$q->where("user_id",Auth::id()))
-            ->
-        latest('id')->paginate(10)->withQueryString();
+        ->latest('id')
+        ->with(['category','user'])
+        ->paginate(10)
+        ->withQueryString();
         return view('post.index',compact('posts'));
     }
 
@@ -61,6 +65,17 @@ class PostController extends Controller
             $post->featured_image = $newName;
         }
         $post->save();
+
+        foreach ($request->photos as $photo){
+            $newName = uniqid()."_post_photo.".$photo->extension();
+            $photo->storeAs('public',$newName);
+
+            $photo = new Photo();
+            $photo->post_id = $post->id;
+            $photo->name = $newName;
+            $photo->save();
+        }
+
         return redirect()->route('post.index');
     }
 
@@ -115,6 +130,16 @@ class PostController extends Controller
             $post->featured_image = $newName;
         }
         $post->update();
+        foreach ($request->photos as $photo){
+            $newName = uniqid()."_post_photo.".$photo->extension();
+            $photo->storeAs('public',$newName);
+
+            $photo = new Photo();
+            $photo->post_id = $post->id;
+            $photo->name = $newName;
+            $photo->save();
+        }
+
         return redirect()->route('post.index');
     }
 
@@ -126,13 +151,22 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (Gate::denies('dedate',$post)){
+        if (Gate::denies('delete',$post)){
             return abort(403,'You Are not allowed');
         }
 
         if (isset($post->featured_image)){
             Storage::delete('public/'.$post->featured_image);
         }
+
+        foreach ($post->photos as $photo) {
+            Storage::delete('public/'.$photo->name);
+
+            //delete from db table
+            $photo->delete();
+            return redirect()->back();
+        }
+
         $post->delete();
         return redirect()->route('post.index');
 

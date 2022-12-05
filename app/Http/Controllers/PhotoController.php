@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Photo;
+use App\Http\Requests\StorePhotoRequest;
+use App\Http\Requests\UpdatePhotoRequest;
+use Illuminate\Support\Facades\Storage;
 
-class UserController extends Controller
+class PhotoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,16 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::when(request('keyword'),function ($q){
-            $keyword = request('keyword');
-            $q->orWhere("name","like","%$keyword%")
-                ->orWhere("email","like","%$keyword%");
-        })->
-        latest('id')
-            ->with(['user'])
-            ->paginate(10)
-            ->withQueryString();
-        return view('user.index',compact('users'));
+        return view('photo.index');
     }
 
     /**
@@ -39,10 +32,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StorePhotoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePhotoRequest $request)
     {
         //
     }
@@ -50,10 +43,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Photo $photo)
     {
         //
     }
@@ -61,10 +54,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(Photo $photo)
     {
         //
     }
@@ -72,11 +65,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  \App\Http\Requests\UpdatePhotoRequest  $request
+     * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdatePhotoRequest $request, Photo $photo)
     {
         //
     }
@@ -84,11 +77,16 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Photo  $photo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Photo $photo)
     {
-        //
+        //delete from storage
+        Storage::delete('public',$photo->name);
+
+        //delete from db table
+        $photo->delete();
+        return redirect()->back();
     }
 }
